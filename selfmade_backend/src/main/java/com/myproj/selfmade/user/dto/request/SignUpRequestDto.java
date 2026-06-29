@@ -1,5 +1,6 @@
 package com.myproj.selfmade.user.dto.request;
 
+import com.myproj.selfmade.user.entity.Role;
 import com.myproj.selfmade.user.entity.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -22,12 +23,17 @@ public class SignUpRequestDto {
     @Size(min = 8, message = "비밀번호는 최소 8자 이상이어야 합니다")
     private String password;
 
+    @NotBlank(message = "전화번호는 필수입니다.")
+    private String phone;
+
     // 나중에 회원가입 메소드에서 비밀번호를 암호화된 값으로 저장하기 위한 유틸리티 메소드
     public User toEntity(String encodedPassword) {
         return User.builder()
                 .name(this.name)
                 .email(this.email)
                 .password(encodedPassword)
+                .phone(this.phone)
+                .role(Role.CUSTOMER)  //일반 회원가입은 기본값으로 CUSTOMER
                 .build();
     }
 }

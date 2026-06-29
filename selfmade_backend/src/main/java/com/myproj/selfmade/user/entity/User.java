@@ -16,13 +16,21 @@ public class User {
     private Long id;
 
     private String name;
+    @Column(unique = true)
     private String email;
+
     private String password;
+    private String phone;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @Builder
-    public User(String name, String email, String password){
+    public User(String name, String email, String password, String phone, Role role){
         this.name = name;
         this.email = email;
         this.password=password;
+        this.phone=phone;
+        this.role=role;
     }
 }
