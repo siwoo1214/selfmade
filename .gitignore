@@ -1,0 +1,29 @@
+# ========================
+# Backend (Spring Boot)
+# ========================
+selfmade_backend/.gradle/
+selfmade_backend/build/
+selfmade_backend/.idea/
+selfmade_backend/*.iml
+selfmade_backend/out/
+selfmade_backend/.env
+
+# ========================
+# Frontend (React + Vite)
+# ========================
+selfmade_front/node_modules/
+selfmade_front/dist/
+selfmade_front/.env
+selfmade_front/.env.local
+
+# ========================
+# OS
+# ========================
+.DS_Store
+Thumbs.db
+
+# ========================
+# IDE
+# ========================
+.idea/
+*.iml
