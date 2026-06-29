@@ -16,17 +16,10 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/users")
+@RequestMapping("/api/auth")
 public class UserController {
 
     private final UserService userService;
-
-    // hi
-    @GetMapping("/hello")
-    public String hello(){
-        log.info("hello");
-        return "hello";
-    }
 
     @GetMapping("/user")
     public ResponseEntity<ApiResponse<UserResponseDto>> getUser(@RequestParam String email){
@@ -37,7 +30,7 @@ public class UserController {
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse<UserResponseDto>> signUp(@Valid @RequestBody SignUpRequestDto request){
         UserResponseDto data = userService.signUp(request);
-        return ResponseEntity.ok(ApiResponse.success(data));
+        return ResponseEntity.status(201).body(ApiResponse.success(data, "회원가입이 완료되었습니다."));
     }
 
     @PostMapping("/login")

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/users/tokens")
+@RequestMapping("/api/auth")
 public class TokenController {
 
     private final TokenService tokenService;
