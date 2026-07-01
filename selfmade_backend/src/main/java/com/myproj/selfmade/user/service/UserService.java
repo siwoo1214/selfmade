@@ -90,7 +90,7 @@ public class UserService {
 
         // jwt 로직 추가
         // 로그인 하면 토큰 두개 만들어주고
-        String accessToken = jwtProvider.generateAccessToken(user.getEmail());
+        String accessToken = jwtProvider.generateAccessToken(user.getEmail(), user.getRole().name());
         String refreshToken = jwtProvider.generateRefreshToken(user.getEmail());
 
         refreshTokenRepository.save(user.getEmail(), refreshToken, jwtProvider.getRefreshTokenExpiration());

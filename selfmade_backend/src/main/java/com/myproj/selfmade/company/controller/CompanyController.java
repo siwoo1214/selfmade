@@ -6,6 +6,7 @@ import com.myproj.selfmade.company.entity.CompanyStatus;
 import com.myproj.selfmade.company.service.CompanyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +20,7 @@ public class CompanyController {
     private final CompanyService companyService;
 
     // ADMIN - 판매자 신청 목록 조회
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/admin/companies")
     public ResponseEntity<ApiResponse<List<CompanyResponseDto>>> getCompanies(
             @RequestParam(defaultValue="PENDING") CompanyStatus status
@@ -28,6 +30,7 @@ public class CompanyController {
     }
 
     // ADMIN - 판매자 신청 상세 조회
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/admin/companies/{id}")
     public ResponseEntity<ApiResponse<CompanyResponseDto>> getCompany(
             @PathVariable Long id
@@ -37,6 +40,7 @@ public class CompanyController {
     }
 
     // ADMIN — 판매자 승인
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/admin/companies/{id}/approve")
     public ResponseEntity<ApiResponse<Void>> approveCompany(
             @PathVariable Long id
@@ -46,6 +50,7 @@ public class CompanyController {
     }
 
     // ADMIN — 판매자 거절
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/admin/companies/{id}/reject")
     public ResponseEntity<ApiResponse<Void>> rejectCompany(
             @PathVariable Long id
@@ -55,6 +60,7 @@ public class CompanyController {
     }
 
     // SELLER - 내 회사 정보 조회
+    @PreAuthorize("hasRole('SELLER')")
     @GetMapping("/seller/company")
     public ResponseEntity<ApiResponse<CompanyResponseDto>> getSellerCompany(
             @AuthenticationPrincipal String email

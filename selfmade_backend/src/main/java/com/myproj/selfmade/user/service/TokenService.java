@@ -1,9 +1,12 @@
 package com.myproj.selfmade.user.service;
 
 import com.myproj.selfmade.global.exception.InvalidTokenException;
+import com.myproj.selfmade.global.exception.UserNotFoundException;
 import com.myproj.selfmade.global.jwt.JwtProvider;
 import com.myproj.selfmade.global.jwt.RefreshTokenRepository;
 import com.myproj.selfmade.user.dto.response.TokenResponseDto;
+import com.myproj.selfmade.user.entity.User;
+import com.myproj.selfmade.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +16,7 @@ public class TokenService {
 
     private final JwtProvider jwtProvider;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final UserRepository userRepository;
 
     public TokenResponseDto reissue(String refreshToken){
 
@@ -31,8 +35,11 @@ public class TokenService {
             throw new InvalidTokenException();
         }
 
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
+
         // 모든 유효성 검사 통과하면 이메일값으로 새로운 토큰 값들 만들기
-        String newAccessToken = jwtProvider.generateAccessToken(email);
+        String newAccessToken = jwtProvider.generateAccessToken(email,user.getRole().name());
         String newRefreshToken = jwtProvider.generateRefreshToken(email);
 
         // redis에 새로운 refresh token 저장해주기
