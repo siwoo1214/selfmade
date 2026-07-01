@@ -2,6 +2,7 @@ package com.myproj.selfmade.user.controller;
 
 import com.myproj.selfmade.ApiResponse;
 import com.myproj.selfmade.user.dto.request.LoginRequestDto;
+import com.myproj.selfmade.user.dto.request.SellerSignUpRequestDto;
 import com.myproj.selfmade.user.dto.request.SignUpRequestDto;
 import com.myproj.selfmade.user.dto.response.TokenResponseDto;
 import com.myproj.selfmade.user.dto.response.UserResponseDto;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -20,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
+
 
     @GetMapping("/user")
     public ResponseEntity<ApiResponse<UserResponseDto>> getUser(@RequestParam String email){
@@ -43,6 +47,21 @@ public class UserController {
     public ResponseEntity<Void> logout(@AuthenticationPrincipal String email){
         userService.logout(email);
         return ResponseEntity.noContent().build();
+    }
+
+    // seller로 회원가입하기
+    @PostMapping("/signup/seller")
+    public ResponseEntity<ApiResponse<UserResponseDto>> sellerSignup(
+            @Valid @RequestBody SellerSignUpRequestDto request
+            ){
+        UserResponseDto data = userService.sellerSignup(request);
+        return  ResponseEntity.status(201).body(ApiResponse.success(data));
+    }
+
+    // ADMIN 넣어보고 테스트 하려고 잠깐 만들었음
+    @GetMapping("/api/test/encode")
+    public ResponseEntity<String> encode(@RequestParam String password) {
+        return ResponseEntity.ok(passwordEncoder.encode(password));
     }
 
 }
