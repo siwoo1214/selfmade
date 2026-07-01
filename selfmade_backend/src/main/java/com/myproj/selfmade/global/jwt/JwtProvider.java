@@ -30,12 +30,12 @@ public class JwtProvider {
         this.refreshTokenExpiration = refreshTokenExpiration;
     }
 
-    public String generateAccessToken(String email) {
-        return generateToken(email, accessTokenExpiration);
+    public String generateAccessToken(String email, String role) {
+        return generateToken(email, role, accessTokenExpiration);
     }
 
     public String generateRefreshToken(String email) {
-        return generateToken(email, refreshTokenExpiration);
+        return generateToken(email, null, refreshTokenExpiration);
     }
 
     public String getEmail(String token) {
@@ -55,14 +55,22 @@ public class JwtProvider {
         }
     }
 
-    private String generateToken(String email, long expiration) {
+    private String generateToken(String email, String role, long expiration) {
         Date now = new Date();
-        return Jwts.builder()
-                .subject(email)
-                .issuedAt(now)
-                .expiration(new Date(now.getTime() + expiration))
-                .signWith(secretKey)
-                .compact();
+        var builder = Jwts.builder()
+                        .subject(email)
+                        .issuedAt(now)
+                        .expiration(new Date(now.getTime() + expiration));
+
+        if(role != null){
+            builder.claim("role", role);
+        }
+
+        return builder.signWith(secretKey).compact();
+    }
+
+    public String getRole(String token){
+        return parseClaims(token).get("role", String.class);
     }
 
     private Claims parseClaims(String token) {
@@ -72,4 +80,6 @@ public class JwtProvider {
                 .parseSignedClaims(token)
                 .getPayload();
     }
+    // 2단계 — JwtAuthFilter에서 권한 등록
+    // 여기서부터 시작하면 됨
 }
